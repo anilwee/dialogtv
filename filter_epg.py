@@ -1,6 +1,6 @@
 import gzip
 import xml.etree.ElementTree as ET
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 # Channels to filter
 CHANNELS = [
@@ -20,8 +20,8 @@ def filter_epg(input_file, output_file):
         tree = ET.parse(f)
     root = tree.getroot()
 
-    # Get the current time and 24 hours later
-    now = datetime.now()
+    # Get the current time and 24 hours later with timezone
+    now = datetime.now(timezone.utc)
     end_time = now + timedelta(hours=24)
 
     # Filter the programs
