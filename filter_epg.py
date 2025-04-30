@@ -4,10 +4,12 @@ from datetime import datetime, timedelta, timezone
 
 # Channels to filter
 CHANNELS = [
-    "Rupavahini", "ITN", "Sirasa TV", "Siyatha TV", "Swarnavahini", "Hiru TV",
-    "TV Derana", "TNL", "Supreme TV", "Ridee TV", "Citi Hitz", "Channel Eye",
-    "Nethra TV", "ART TV", "TV1", "Shakthi TV", "Vasantham TV", "Ada Derana 24",
-    "Rangiri Sri Lanka", "The Buddhist TV", "Shraddha TV", "Hi TV"
+    "ADA DERANA 24", "ART Television", "Buddhist TV", "Channel C", "Channel One", 
+    "Citi Hitz", "Damsathara TV", "God TV/Swarga TV", "Haritha TV", "Hi TV", 
+    "Hiru TV", "ITN", "Jaya TV", "Monara TV", "Nethra TV", "Pragna TV", 
+    "Rangiri Sri Lanka", "Ridee TV", "Rupavahini", "Shakthi TV", "Shraddha TV", 
+    "Sirasa TV", "Siyatha TV", "Supreme TV", "Swarnawahini Live", "Swarnawahini", "TNL", 
+    "TV Derana", "TV Didula", "TV1 Sri Lanka", "Vasantham TV"
 ]
 
 # Input and output file paths
