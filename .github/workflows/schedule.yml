@@ -2,7 +2,7 @@ name: Update Filtered EPG
 
 on:
   schedule:
-    - cron: "0 0 * * *" # Runs daily at midnight UTC
+    - cron: "0 12 * * *" # Runs daily at 12:00 PM UTC (01:00 AM NZT during daylight savings)
   workflow_dispatch: # Allows manual triggering
 
 jobs:
