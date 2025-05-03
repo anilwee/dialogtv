@@ -17,7 +17,7 @@ jobs:
       run: |
         wget --header="Authorization: Bearer ${{ secrets.PRIVATE_REPO_TOKEN }}" \
              -O epg.xml.gz \
-             ${{ secrets.CRITICAL_LINK }}
+             https://github.com/anilwee/dialog/raw/refs/heads/main/public/epg.xml.gz
 
     - name: Verify File Download
       run: |
