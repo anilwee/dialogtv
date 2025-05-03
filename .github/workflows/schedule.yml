@@ -19,7 +19,7 @@ jobs:
         python-version: 3.x
 
     - name: Download EPG XML
-      run: wget -O epg.xml.gz https://github.com/anilwee/dialog/raw/main/public/epg.xml.gz
+      run: wget -O epg.xml.gz ${{ secrets.CRITICAL_LINK }}
 
     - name: Run the filter script
       run: python filter_epg.py
