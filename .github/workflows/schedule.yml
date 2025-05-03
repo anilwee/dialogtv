@@ -21,9 +21,12 @@ jobs:
 
     - name: Download or Generate epg.xml.gz
       run: |
+        mkdir -p public
         if [ ! -f "public/epg.xml.gz" ]; then
           echo "Downloading epg.xml.gz..."
-          curl -o public/epg.xml.gz http://example.com/epg.xml.gz
+          curl -H "Authorization: token ${{ secrets.PRIVATE_REPO_TOKEN }}" \
+               -o public/epg.xml.gz \
+               ${{ secrets.CRITICAL_LINK }}
         fi
 
     - name: Install Python
