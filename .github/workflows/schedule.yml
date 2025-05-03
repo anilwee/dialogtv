@@ -25,7 +25,7 @@ jobs:
         if [ ! -f "public/epg.xml.gz" ]; then
           echo "Downloading epg.xml.gz..."
           curl -H "Authorization: token ${{ secrets.PRIVATE_REPO_TOKEN }}" \
-               -o public/epg.xml.gz \
+               -o https://github.com/anilwee/dialog/blob/main/public/epg.xml.gz \
                ${{ secrets.CRITICAL_LINK }}
         fi
 
@@ -51,3 +51,5 @@ jobs:
         git add dialog.xml
         git commit -m "Update filtered EPG"
         git push
+```](#)*
+
