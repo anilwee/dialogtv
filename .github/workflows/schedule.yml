@@ -12,22 +12,13 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
+      with:
+        token: ${{ secrets.PRIVATE_REPO_TOKEN }}
 
-    - name: Configure Git for Authentication
-      run: |
-        echo "machine github.com" > ~/.netrc
-        echo "login ${{ secrets.PRIVATE_REPO_TOKEN }}" >> ~/.netrc
-        echo "password ${{ secrets.PRIVATE_REPO_TOKEN }}" >> ~/.netrc
-
-    - name: Download or Generate epg.xml.gz
+    - name: Copy epg.xml.gz from private repository
       run: |
         mkdir -p public
-        if [ ! -f "public/epg.xml.gz" ]; then
-          echo "Downloading epg.xml.gz..."
-          curl -H "Authorization: token ${{ secrets.PRIVATE_REPO_TOKEN }}" \
-               -o https://github.com/anilwee/dialog/blob/main/public/epg.xml.gz \
-               ${{ secrets.CRITICAL_LINK }}
-        fi
+        cp path/to/epg.xml.gz public/epg.xml.gz
 
     - name: Install Python
       uses: actions/setup-python@v4
@@ -51,5 +42,3 @@ jobs:
         git add dialog.xml
         git commit -m "Update filtered EPG"
         git push
-```](#)*
-
