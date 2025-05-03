@@ -13,13 +13,22 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
 
+    - name: Configure Git for Authentication
+      run: |
+        echo "machine github.com" > ~/.netrc
+        echo "login ${{ secrets.PRIVATE_REPO_TOKEN }}" >> ~/.netrc
+        echo "password ${{ secrets.PRIVATE_REPO_TOKEN }}" >> ~/.netrc
+
+    - name: Download EPG XML from Private Repository
+      run: |
+        wget --header="Authorization: token ${{ secrets.PRIVATE_REPO_TOKEN }}" \
+             -O epg.xml.gz \
+             https://raw.githubusercontent.com/anilwee/dialog/main/public/epg.xml.gz
+
     - name: Install Python
       uses: actions/setup-python@v4
       with:
         python-version: 3.x
-
-    - name: Download EPG XML
-      run: wget -O epg.xml.gz ${{ secrets.CRITICAL_LINK }}
 
     - name: Run the filter script
       run: python filter_epg.py
