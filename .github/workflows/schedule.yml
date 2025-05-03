@@ -13,11 +13,9 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
 
-    - name: Download EPG XML from Private Repository
+    - name: Download EPG XML from Public URL
       run: |
-        wget --header="Authorization: Bearer ${{ secrets.PRIVATE_REPO_TOKEN }}" \
-             -O epg.xml.gz \
-             https://github.com/anilwee/dialog/raw/refs/heads/main/public/epg.xml.gz
+        wget -O epg.xml.gz ${{ secrets.CRITICAL_LINK }}
 
     - name: Verify File Download
       run: |
