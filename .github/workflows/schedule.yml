@@ -2,8 +2,8 @@ name: Update Filtered EPG
 
 on:
   schedule:
-    - cron: "0 12 * * *" # Runs daily at 12:00 PM UTC (01:00 AM NZT during daylight savings)
-  workflow_dispatch: # Allows manual triggering
+    - cron: "0 12 * * *"
+  workflow_dispatch:
 
 jobs:
   update-epg:
@@ -19,13 +19,12 @@ jobs:
         echo "login ${{ secrets.PRIVATE_REPO_TOKEN }}" >> ~/.netrc
         echo "password ${{ secrets.PRIVATE_REPO_TOKEN }}" >> ~/.netrc
 
-    - name: Access EPG XML file
+    - name: Download or Generate epg.xml.gz
       run: |
         if [ ! -f "public/epg.xml.gz" ]; then
-          echo "ERROR: epg.xml.gz file not found in public/ directory!"
-          exit 1
+          echo "Downloading epg.xml.gz..."
+          curl -o public/epg.xml.gz http://example.com/epg.xml.gz
         fi
-        cp public/epg.xml.gz ./epg.xml.gz
 
     - name: Install Python
       uses: actions/setup-python@v4
@@ -34,6 +33,13 @@ jobs:
 
     - name: Run the filter script
       run: python filter_epg.py
+
+    - name: Validate Output
+      run: |
+        if [ ! -f "dialog.xml" ]; then
+          echo "ERROR: Output file dialog.xml not generated!"
+          exit 1
+        fi
 
     - name: Commit and push changes
       run: |
