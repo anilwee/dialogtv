@@ -15,10 +15,10 @@ jobs:
       with:
         token: ${{ secrets.PRIVATE_REPO_TOKEN }}
 
-    - name: Copy epg.xml.gz from private repository
+    - name: Copy epg.xml.gz from public directory
       run: |
         mkdir -p public
-        cp path/to/epg.xml.gz public/epg.xml.gz
+        cp public/epg.xml.gz public/epg.xml.gz
 
     - name: Install Python
       uses: actions/setup-python@v4
