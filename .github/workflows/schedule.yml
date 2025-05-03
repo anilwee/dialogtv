@@ -22,7 +22,7 @@ jobs:
     - name: Download or Generate epg.xml.gz
       run: |
         mkdir -p public
-        if [ ! -f "https://github.com/anilwee/dialog/blob/main/public/epg.xml.gz" ]; then
+        if [ ! -f "public/epg.xml.gz" ]; then
           echo "Downloading epg.xml.gz..."
           curl -H "Authorization: token ${{ secrets.PRIVATE_REPO_TOKEN }}" \
                -o https://github.com/anilwee/dialog/blob/main/public/epg.xml.gz \
