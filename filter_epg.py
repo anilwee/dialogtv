@@ -19,7 +19,6 @@ INPUT_FILE = "epg.xml.gz"
 OUTPUT_FILE = "dialog.xml"
 
 def filter_epg(input_file, output_file):
-    # Check if input file exists
     if not os.path.exists(input_file):
         print(f"ERROR: Input file '{input_file}' not found!")
         sys.exit(1)
@@ -59,6 +58,9 @@ def filter_epg(input_file, output_file):
         tree.write(output_file, encoding="utf-8", xml_declaration=True)
         print(f"Filtered EPG saved to '{output_file}'.")
 
+    except ET.ParseError as parse_error:
+        print(f"ERROR: XML parsing failed: {parse_error}.")
+        sys.exit(1)
     except Exception as e:
         print(f"ERROR: Failed to process the EPG file: {e}")
         sys.exit(1)
