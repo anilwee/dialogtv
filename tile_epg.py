@@ -1,7 +1,7 @@
 import xml.etree.ElementTree as ET
 import sys
 
-def tile_epg(input_file, output_file):
+def tile_epg(input_file, output_file, filtered_channels):
     # Parse the input XML file
     tree = ET.parse(input_file)
     root = tree.getroot()
@@ -9,11 +9,14 @@ def tile_epg(input_file, output_file):
     # Create a new root for the tiled XML
     tiled_root = ET.Element('tv')
 
-    # Group programs by time slots
+    # Group programs by time slots for filtered channels
     time_slots = {}
     for programme in root.findall('programme'):
-        start_time = programme.attrib['start']
         channel = programme.attrib['channel']
+        if channel not in filtered_channels:  # Skip unfiltered channels
+            continue
+
+        start_time = programme.attrib['start']
 
         # Use start time as the key for grouping
         if start_time not in time_slots:
@@ -33,12 +36,13 @@ def tile_epg(input_file, output_file):
 
 # Main script execution
 if __name__ == '__main__':
-    if len(sys.argv) != 3:
-        print("Usage: python tile_epg.py <input_epg.xml> <output_lktv.xml>")
+    if len(sys.argv) < 4:
+        print("Usage: python tile_epg.py <input_epg.xml> <output_lktv.xml> <channel1> [<channel2> ...]")
         sys.exit(1)
 
     input_file = sys.argv[1]
     output_file = sys.argv[2]
+    filtered_channels = sys.argv[3:]  # Channels to include in the tiled XML
 
-    tile_epg(input_file, output_file)
+    tile_epg(input_file, output_file, filtered_channels)
     print(f"Tiled EPG file created: {output_file}")
