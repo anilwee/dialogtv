@@ -16,10 +16,22 @@ CHANNELS = [
 INPUT_FILE = "epg.xml.gz"
 OUTPUT_FILE = "dialog.xml"
 
+def validate_and_parse_xml(file):
+    try:
+        with gzip.open(file, 'rb') as f:
+            tree = ET.parse(f)
+        return tree
+    except ET.ParseError as e:
+        print(f"Error parsing XML file: {e}")
+        return None
+
 def filter_epg(input_file, output_file):
-    # Decompress the gzipped input file
-    with gzip.open(input_file, 'rb') as f:
-        tree = ET.parse(f)
+    # Validate and parse the XML
+    tree = validate_and_parse_xml(input_file)
+    if tree is None:
+        print("Skipping processing due to XML errors.")
+        return
+
     root = tree.getroot()
 
     # Get the current time and 24 hours later with timezone
