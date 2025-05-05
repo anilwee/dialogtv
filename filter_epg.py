@@ -23,6 +23,10 @@ def validate_and_parse_xml(file):
         return tree
     except ET.ParseError as e:
         print(f"Error parsing XML file: {e}")
+        with gzip.open(file, 'rb') as f:
+            content = f.read()
+            with open("malformed_epg.xml", "wb") as debug_file:
+                debug_file.write(content[:1000])  # Save first 1000 bytes for debugging
         return None
 
 def filter_epg(input_file, output_file):
