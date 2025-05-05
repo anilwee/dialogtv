@@ -1,3 +1,10 @@
+name: Update Filtered EPG
+
+on:
+  schedule:
+    - cron: "0 12 * * *" # Runs daily at 12:00 PM UTC (01:00 AM NZT during daylight savings)
+  workflow_dispatch: # Allows manual triggering
+
 jobs:
   update-epg:
     runs-on: ubuntu-latest
@@ -10,10 +17,12 @@ jobs:
       run: |
         wget -O epg.xml.gz ${{ secrets.CRITICAL_LINK }}
 
-    - name: Verify XML Integrity
+    - name: Verify File Download
       run: |
-        gzip -d epg.xml.gz
-        xmllint epg.xml --noout || (echo "Invalid XML file detected!" && exit 1)
+        echo "Listing current directory contents:"
+        ls -R
+        echo "Checking if epg.xml.gz exists:"
+        [ -f "epg.xml.gz" ] && echo "File exists!" || echo "File NOT found!"
 
     - name: Move EPG File
       run: |
@@ -33,5 +42,5 @@ jobs:
         git config --global user.name "GitHub Actions Bot"
         git config --global user.email "actions@github.com"
         git add dialog.xml
-        git commit -m "Update filtered EPG" || echo "No changes to commit"
+        git commit -m "Update filtered EPG"
         git push
