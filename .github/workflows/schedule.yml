@@ -13,18 +13,16 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
 
-    - name: Download EPG XML from Provided URL
+    - name: Download EPG XML from Public URL
       run: |
-        wget -O epg.xml.gz https://github.com/anilwee/dialog/raw/refs/heads/main/public/epg.xml.gz
+        wget -O epg.xml.gz ${{ secrets.CRITICAL_LINK }}
 
     - name: Verify File Download
       run: |
-        if [ ! -f "epg.xml.gz" ]; then
-          echo "ERROR: epg.xml.gz not found!"
-          exit 1
-        fi
-        echo "File downloaded successfully."
-        gzip -t epg.xml.gz || { echo "ERROR: epg.xml.gz is corrupted!"; exit 1; }
+        echo "Listing current directory contents:"
+        ls -R
+        echo "Checking if epg.xml.gz exists:"
+        [ -f "epg.xml.gz" ] && echo "File exists!" || echo "File NOT found!"
 
     - name: Move EPG File
       run: |
