@@ -17,9 +17,9 @@ jobs:
       run: |
         wget -O epg.xml ${{ secrets.CRITICAL_LINK }}
 
-    - name: Inspect Problematic Line
+    - name: Debug Problematic Line
       run: |
-        echo "Problematic line in the XML file:"
+        echo "Inspecting problematic line in the XML file:"
         sed -n '100373p' epg.xml
 
     - name: Install Python
