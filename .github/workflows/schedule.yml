@@ -9,16 +9,16 @@ jobs:
   process-epg:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Set up Python
+      - name: Set Up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.9'
 
-      - name: Install dependencies
-        run: pip install requests xmltodict
+      - name: Install Dependencies
+        run: pip install lxml
 
       - name: Download EPG File
         env:
@@ -27,7 +27,7 @@ jobs:
           # Download the file
           curl -L $CRITICAL_LINK -o epg.xml.gz
 
-      - name: Check File Type
+      - name: Check File Type and Decompress if Necessary
         run: |
           # Check if the file is gzip format
           if file epg.xml.gz | grep -q 'gzip compressed data'; then
@@ -38,7 +38,14 @@ jobs:
             mv epg.xml.gz epg.xml
           fi
 
-      - name: Filter the EPG
+      - name: Debug EPG File
+        run: |
+          echo "Inspecting the first 30 lines of the XML file:"
+          head -n 30 epg.xml
+          echo "Validating XML file:"
+          xmllint --noout epg.xml || echo "XML validation failed"
+
+      - name: Filter the EPG File
         run: python src/filter_xml.py
 
       - name: Commit and Push Changes
