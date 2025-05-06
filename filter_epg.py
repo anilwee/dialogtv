@@ -1,5 +1,6 @@
 import os
 import gzip
+import requests
 import xml.etree.ElementTree as ET
 from datetime import datetime, timedelta
 
@@ -13,7 +14,18 @@ CHANNELS = [
     "TV Derana", "TV Didula", "TV1 Sri Lanka", "Vasantham TV"
 ]
 
+def download_file(url, output_path):
+    """Download the file from the given URL."""
+    response = requests.get(url, stream=True)
+    if response.status_code == 200:
+        with open(output_path, 'wb') as f:
+            for chunk in response.iter_content(chunk_size=8192):
+                f.write(chunk)
+    else:
+        raise Exception(f"Failed to download file: {response.status_code} {response.reason}")
+
 def filter_epg(input_file, output_file):
+    """Filter the EPG XML for specified channels and a 48-hour window."""
     # Parse the input XML
     with gzip.open(input_file, 'rb') as f:
         tree = ET.parse(f)
@@ -41,9 +53,14 @@ def filter_epg(input_file, output_file):
 
 if __name__ == "__main__":
     # Input and output paths
-    input_path = os.environ.get("CRITICAL_LINK")
+    input_url = os.environ.get("CRITICAL_LINK")
+    input_path = "epg.xml.gz"
     output_path = "dialog.xml"
 
     # Download and process the file
-    filter_epg(input_path, output_path)
-    print(f"Filtered EPG saved to {output_path}")
+    if input_url:
+        download_file(input_url, input_path)
+        filter_epg(input_path, output_path)
+        print(f"Filtered EPG saved to {output_path}")
+    else:
+        print("CRITICAL_LINK environment variable is not set.")
