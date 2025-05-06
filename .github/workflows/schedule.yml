@@ -17,9 +17,6 @@ jobs:
         with:
           python-version: "3.x"
 
-      - name: Install Dependencies
-        run: pip install xml.etree.ElementTree
-
       - name: Run Extraction and Filtering
         env:
           CRITICAL_LINK: ${{ secrets.CRITICAL_LINK }}
