@@ -2,8 +2,8 @@ name: Update EPG
 
 on:
   schedule:
-    - cron: "0 *0 * * *"  # Every 24 hours
-  workflow_dispatch:
+    - cron: "0 12 * * *"  # 00:00 AKL/NZ time (12:00 UTC)
+  workflow_dispatch:  # Allow manual trigger
 
 jobs:
   update-epg:
