@@ -19,11 +19,11 @@ jobs:
 
     - name: Verify File Integrity
       run: |
-        echo "Listing file information:"
+        echo "Listing file details:"
         ls -lh epg.xml.gz
         echo "Checking file type:"
         file epg.xml.gz
-        echo "Displaying first 20 bytes:"
+        echo "Printing the first few bytes of the file:"
         head -c 20 epg.xml.gz | xxd
 
     - name: Install Python
