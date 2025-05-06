@@ -20,18 +20,23 @@ jobs:
       - name: Install dependencies
         run: pip install requests xmltodict
 
-      - name: Fetch and Filter EPG
+      - name: Download and Filter EPG
         env:
           CRITICAL_LINK: ${{ secrets.CRITICAL_LINK }}
         run: |
+          # Download the file from the critical link
           curl -L $CRITICAL_LINK -o epg.xml.gz
+          
+          # Unzip the file
           gzip -d epg.xml.gz
-          python filter_epg.py
+          
+          # Run the Python filtering script
+          python src/filter_xml.py
 
       - name: Commit and Push Changes
         run: |
           git config user.name "GitHub Actions"
           git config user.email "actions@users.noreply.github.com"
-          git add dialog.xml
+          git add public/dialog.xml
           git commit -m "Update filtered EPG"
           git push
