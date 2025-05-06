@@ -17,14 +17,16 @@ jobs:
       run: |
         wget -O epg.xml.gz ${{ secrets.CRITICAL_LINK }}
 
-    - name: Verify File Integrity
+    - name: Inspect Decompressed XML File
       run: |
-        echo "Listing file details:"
-        ls -lh epg.xml.gz
-        echo "Checking file type:"
-        file epg.xml.gz
-        echo "Printing the first few bytes of the file:"
-        head -c 20 epg.xml.gz | xxd
+        gunzip -c epg.xml.gz > epg.xml
+        echo "First 50 lines of the XML file:"
+        head -n 50 epg.xml
+
+    - name: Validate XML Structure
+      run: |
+        gunzip -c epg.xml.gz > epg.xml
+        xmllint --noout epg.xml || echo "XML validation failed. Please investigate."
 
     - name: Install Python
       uses: actions/setup-python@v4
