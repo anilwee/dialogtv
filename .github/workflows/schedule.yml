@@ -20,18 +20,26 @@ jobs:
       - name: Install dependencies
         run: pip install requests xmltodict
 
-      - name: Download and Filter EPG
+      - name: Download EPG File
         env:
           CRITICAL_LINK: ${{ secrets.CRITICAL_LINK }}
         run: |
-          # Download the file from the critical link
+          # Download the file
           curl -L $CRITICAL_LINK -o epg.xml.gz
-          
-          # Unzip the file
-          gzip -d epg.xml.gz
-          
-          # Run the Python filtering script
-          python src/filter_xml.py
+
+      - name: Check File Type
+        run: |
+          # Check if the file is gzip format
+          if file epg.xml.gz | grep -q 'gzip compressed data'; then
+            echo "File is in gzip format. Decompressing..."
+            gzip -d epg.xml.gz
+          else
+            echo "File is not in gzip format. Renaming..."
+            mv epg.xml.gz epg.xml
+          fi
+
+      - name: Filter the EPG
+        run: python src/filter_xml.py
 
       - name: Commit and Push Changes
         run: |
