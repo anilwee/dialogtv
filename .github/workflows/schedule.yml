@@ -17,17 +17,14 @@ jobs:
       run: |
         wget -O epg.xml.gz ${{ secrets.CRITICAL_LINK }}
 
-    - name: Verify File Download
+    - name: Verify File Integrity
       run: |
-        echo "Listing current directory contents:"
-        ls -R
-        echo "Checking if epg.xml.gz exists:"
-        [ -f "epg.xml.gz" ] && echo "File exists!" || echo "File NOT found!"
-
-    - name: Move EPG File
-      run: |
-        mkdir -p public
-        cp epg.xml.gz public/
+        echo "Listing file information:"
+        ls -lh epg.xml.gz
+        echo "Checking file type:"
+        file epg.xml.gz
+        echo "Displaying first 20 bytes:"
+        head -c 20 epg.xml.gz | xxd
 
     - name: Install Python
       uses: actions/setup-python@v4
