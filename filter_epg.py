@@ -21,12 +21,15 @@ def is_gzip_file(filepath):
         return magic == b'\x1f\x8b'  # Gzip magic number
 
 def filter_epg(input_file, output_file):
-    if not is_gzip_file(input_file):
-        raise ValueError("The input file is not a valid Gzip-compressed file.")
-
-    # Decompress the gzipped input file
-    with gzip.open(input_file, 'rb') as f:
-        tree = ET.parse(f)
+    if is_gzip_file(input_file):
+        # Decompress the gzipped input file
+        with gzip.open(input_file, 'rb') as f:
+            tree = ET.parse(f)
+    else:
+        # Handle plain XML file
+        with open(input_file, 'rb') as f:
+            tree = ET.parse(f)
+    
     root = tree.getroot()
 
     # Filter the XML tree
