@@ -1,34 +1,46 @@
-name: Update EPG
+name: Update Filtered EPG
 
 on:
   schedule:
-    - cron: "0 12 * * *"  # 00:00 AKL/NZ time (12:00 UTC)
-  workflow_dispatch:  # Allow manual trigger
+    - cron: "0 12 * * *" # Runs daily at 12:00 PM UTC (01:00 AM NZT during daylight savings)
+  workflow_dispatch: # Allows manual triggering
 
 jobs:
   update-epg:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
+    - name: Checkout repository
+      uses: actions/checkout@v3
 
-      - name: Set Up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.x"
+    - name: Download EPG XML from Public URL
+      run: |
+        wget -O epg.xml.gz ${{ secrets.CRITICAL_LINK }}
 
-      - name: Install Dependencies
-        run: pip install requests
+    - name: Verify File Download
+      run: |
+        echo "Listing current directory contents:"
+        ls -R
+        echo "Checking if epg.xml.gz exists:"
+        [ -f "epg.xml.gz" ] && echo "File exists!" || echo "File NOT found!"
 
-      - name: Run Extraction and Filtering
-        env:
-          CRITICAL_LINK: ${{ secrets.CRITICAL_LINK }}
-        run: python filter_epg.py
+    - name: Move EPG File
+      run: |
+        mkdir -p public
+        cp epg.xml.gz public/
 
-      - name: Commit and Push Changes
-        run: |
-          git config --global user.name "GitHub Actions"
-          git config --global user.email "actions@github.com"
-          git add dialog.xml
-          git commit -m "Updated dialog.xml" || echo "No changes to commit"
-          git push
+    - name: Install Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: 3.x
+
+    - name: Run the filter script
+      run: python filter_epg.py
+
+    - name: Commit and push changes
+      run: |
+        git config --global user.name "GitHub Actions Bot"
+        git config --global user.email "actions@github.com"
+        git add dialog.xml
+        git commit -m "Update filtered EPG"
+        git push
