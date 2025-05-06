@@ -1,5 +1,3 @@
-import gzip
-import os
 import xml.etree.ElementTree as ET
 
 # Channels to filter
@@ -12,32 +10,21 @@ CHANNELS = [
     "TV Derana", "TV Didula", "TV1 Sri Lanka", "Vasantham TV"
 ]
 
-INPUT_FILE = "epg.xml.gz"
+INPUT_FILE = "epg.xml"
 OUTPUT_FILE = "dialog.xml"
 
-def is_gzip_file(filepath):
-    with open(filepath, 'rb') as f:
-        magic = f.read(2)
-        return magic == b'\x1f\x8b'  # Gzip magic number
-
 def filter_epg(input_file, output_file):
-    if is_gzip_file(input_file):
-        # Decompress the gzipped input file
-        with gzip.open(input_file, 'rb') as f:
-            tree = ET.parse(f)
-    else:
-        # Handle plain XML file
-        with open(input_file, 'rb') as f:
-            tree = ET.parse(f)
-    
+    # Parse the input XML file
+    tree = ET.parse(input_file)
     root = tree.getroot()
 
-    # Filter the XML tree
+    # Filter channels
     for channel in root.findall("./channel"):
         channel_name = channel.find("display-name").text
         if channel_name not in CHANNELS:
             root.remove(channel)
 
+    # Filter programmes
     for programme in root.findall("./programme"):
         if programme.attrib["channel"] not in CHANNELS:
             root.remove(programme)
