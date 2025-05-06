@@ -45,8 +45,18 @@ jobs:
           echo "Validating XML file:"
           xmllint --noout epg.xml || echo "XML validation failed"
 
+      - name: Ensure Public Directory Exists
+        run: mkdir -p public
+
       - name: Filter the EPG File
         run: python src/filter_xml.py
+
+      - name: Check Output File
+        run: |
+          if [ ! -f public/dialog.xml ]; then
+            echo "Error: public/dialog.xml not found!"
+            exit 1
+          fi
 
       - name: Commit and Push Changes
         run: |
